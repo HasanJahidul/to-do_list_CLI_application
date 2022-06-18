@@ -1,14 +1,18 @@
-from printing_functions import thanks
+from printing_functions import thanks,main_menu
 todo_list = []
 
 # handle the operation of the program
 def add_task():
     task = input("Enter a new task: ")
-    todo_list.append(["", "", "", ""])
+    todo_list.append(["", "", "", "",""])
     todo_list[-1][0] = task
-    todo_list[-1][1] = input("Enter the date: ")
-    todo_list[-1][2] = input("Enter the time: ")
-    todo_list[-1][3] = input("Enter the status: ")
+    todo_list[-1][1] = input("Enter a date in YYYY-MM-DD format: ")
+    todo_list[-1][2] = input("Enter a Start time in HH:MM format: ")
+    todo_list[-1][3] = input("Enter the End time in HH:MM format: ")
+    todo_list[-1][4] = input("Enter the description: ")
+    print("\nTask added successfully!")
+    main_menu()
+    user_input()
 
 def update_task():
     task_or_date = input("Enter a task or date: ")
@@ -17,13 +21,31 @@ def update_task():
         if task[0] == task_or_date or task[1] == task_or_date:
             #update the task
             todo_list[index][0] = input("Enter the Updated task: ")
-            todo_list[index][1] = input("Enter the Updated date: ")
-            todo_list[index][2] = input("Enter the Updated time: ")
-            todo_list[index][3] = input("Enter the Updated status: ")
+            todo_list[index][1] = input("Enter the Updated in YYYY-MM-DD format: ")
+            todo_list[index][2] = input("Enter the Updated Start time in HH:MM format: ")
+            todo_list[index][3] = input("Enter the Updated End time in HH:MM format: ")
+            todo_list[-1][4] = input("Enter the description: ")
+            print("\nTask Updated successfully!")
+    main_menu()
+    user_input()
 
 def delete_task():
     task_or_date = input("Enter a task or date: ")
-    todo_list.pop()
+    for index, task in enumerate(todo_list):
+        if task[0] == task_or_date or task[1] == task_or_date:
+            todo_list.pop(index)
+            print("Task deleted successfully!")
+    main_menu()
+    user_input()
+    
+
+def view_all():
+    print ("{:<10} {:<20} {:<20} {:<20} {:<20}".format('Task','Date','Start Time','End Time','Description'))
+    for item in todo_list:
+        task, date, start_time,end_time,des = item
+        print ("{:<10} {:<20} {:<20} {:<20} {:<20}".format(task, ''.join(map(str, date)), ''.join(map(str, start_time)), ''.join(map(str, end_time)),''.join(map(str, des))))  
+    main_menu()
+    user_input()
 
 def operation(operation_type, operation_value, operation_list):
     if operation_type == "delete":
@@ -53,11 +75,9 @@ def user_input():
         elif menu == "2":
            update_task()
         elif menu == "3":
-            task_index = int(
-                input("Enter the index of the task you want to delete: "))
-            operation("delete", task_index, todo_list)
+            delete_task()
         elif menu == "4":
-            operation("view", None, todo_list)
+           view_all()
         elif menu == "5":
             operation("save", None, todo_list)
         elif menu == "6":
