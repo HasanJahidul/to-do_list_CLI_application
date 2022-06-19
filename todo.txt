@@ -1,3 +1,4 @@
 Description          Date                 Start Time           End Time             Place               
-joy                  2011-02-02           11:00                11:11                asdasd
+Python Class         2022-05-04           12:00                13:30                AIUB                
+Java Class           2022-05-05           12:00                13:30                AIUB                
 ********************************************************************
