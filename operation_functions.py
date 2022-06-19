@@ -28,11 +28,16 @@ def add_task():
         if todo_list:
             for index, task in enumerate(todo_list):
                 if task[1]<=start_epoch_time and task[2]>=start_epoch_time:
-                    print(task)
-                    print("Start time should be greater than previous task end time")
-                    # todo_list.pop(-1)
-                    # print("list is not empty")
-                    break
+                    date=datetime.datetime.fromtimestamp(task[1]).strftime("%Y-%m-%d")
+                    start_time = datetime.datetime.fromtimestamp(task[1]).strftime("%H:%M")
+                    end_time = datetime.datetime.fromtimestamp(task[2]).strftime("%H:%M")
+                    print("Opps! Task overlaps with another task")
+                    print ("Have a look at the following task:")
+                    print("{:<20} {:<20} {:<20} {:<20} {:<20}".format(
+                        "Description","Date", "Start time", "End time", "Address"))
+                    print("{:<20} {:<20} {:<20} {:<20} {:<20}".format(
+                        task[0], date,start_time, end_time, task[3]))
+                        
         else:
             print("list is empty")
             add_to_list(description, start_epoch_time, end_epoch_time, address)
@@ -75,9 +80,13 @@ def view_all():
     print("{:<10} {:<20} {:<20} {:<20} {:<20}".format(
         'Description', 'Date', 'Start Time', 'End Time', 'Place'))
     for item in todo_list:
-        task, date, start_time, end_time, des = item
-        print("{:<10} {:<20} {:<20} {:<20} {:<20}".format(task, ''.join(map(str, date)), ''.join(
-            map(str, start_time)), ''.join(map(str, end_time)), ''.join(map(str, des))))
+        des, epoch_start_time, epoch_end_time, add = item
+        date= datetime.datetime.fromtimestamp(epoch_start_time).strftime("%Y-%m-%d")
+        start_time = datetime.datetime.fromtimestamp(epoch_start_time).strftime("%H:%M")
+        end_time = datetime.datetime.fromtimestamp(epoch_end_time).strftime("%H:%M")
+
+        print("{:<10} {:<20} {:<20} {:<20} {:<20}".format(des, ''.join(map(str, date)), ''.join(
+            map(str, start_time)), ''.join(map(str, end_time)), ''.join(map(str, add))))
     main_menu()
     user_input()
 
@@ -128,17 +137,6 @@ def user_input():
         elif menu == "6":
             task = input("Enter the task you want to search: ")
             operation("search", task, todo_list)
-        elif menu == "8":
-            import time
-
-            epoch_time = 1586944173.957986
-            local_time = time.ctime(epoch_time)
-
-            print("The local time is:", local_time)
-        elif menu == "9":
-            print("Logging out … ")
-            time.sleep(3)
-            print("Logout successful!")
         else:
             print("Invalid choice")
         menu = input("Enter your choice: ")
