@@ -3,7 +3,9 @@ import sys
 
 
 def main_menu():
-    print("""
+     print("""********************************************************************
+    \t\t\To-Do List Application\n********************************************************************
+	You can now perform the following operations on this Application\n
     1. Add a new task
     2. Update an existing task
     3. Delete a task
