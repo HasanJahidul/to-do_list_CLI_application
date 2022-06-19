@@ -1,10 +1,11 @@
 from printing_functions import thanks, main_menu
 import datetime
 import time
+
+#declaring a empty list
 todo_list = []
 
-# handle the operation of the program
-
+# adition to list
 def add_to_list(description,start_epoch_time, end_epoch_time, address):
     
     todo_list.append(["","","",""])
@@ -13,6 +14,7 @@ def add_to_list(description,start_epoch_time, end_epoch_time, address):
     todo_list[-1][2]=end_epoch_time
     todo_list[-1][3]=address
     print("\nTask added successfully!\n")
+
 def add_task():
     description = input("Enter a new task: ")
     
@@ -51,54 +53,66 @@ def add_task():
 
 
 def update_task():
-    task_or_date = input("Enter a task or date: ")
-    # search in list and print index
-    try:
-        for index, task in enumerate(todo_list):
-            if task[0] == task_or_date or task[1] == task_or_date:
-                description = input("Enter a new task: ")
-                date= input("Enter a date in YYYY-MM-DD format: ")
-                s_time= input("Enter a Start time in HH:MM format(24 hr): ")
-                e_time= input("Enter the End time in HH:MM format(24 hr): ")
-                address= input("Enter the address: ")
-                try:
-                    start_epoch_time, end_epoch_time = epoch_time(date, s_time, e_time)
-                except:
-                    print("Invalid date or time format")
-                    main_menu()
-                    user_input()
-                if (start_epoch_time > end_epoch_time):
-                    print("Start time should be less than end time")
-                    # todo_list.pop(-1)
-                else:
-                    # update the task
-                    todo_list[index][0] =description
-                    todo_list[index][1] = start_epoch_time
-                    todo_list[index][2] = end_epoch_time
-                    todo_list[index][3] = address
-                    print("\nTask Updated successfully!")
-        main_menu()
-        user_input()
-    except:
-        print("Task not found")
+    if todo_list:
+        task_or_date = input("Enter a task or date: ")
+        # search in list and print index
+        try:
+            for index, task in enumerate(todo_list):
+                if task[0] == task_or_date or task[1] == task_or_date:
+                    description = input("Enter a new task: ")
+                    date= input("Enter a date in YYYY-MM-DD format: ")
+                    s_time= input("Enter a Start time in HH:MM format(24 hr): ")
+                    e_time= input("Enter the End time in HH:MM format(24 hr): ")
+                    address= input("Enter the address: ")
+                    try:
+                        start_epoch_time, end_epoch_time = epoch_time(date, s_time, e_time)
+                    except:
+                        print("Invalid date or time format")
+                        main_menu()
+                        user_input()
+                    if (start_epoch_time > end_epoch_time):
+                        print("Start time should be less than end time")
+                        # todo_list.pop(-1)
+                    else:
+                        # update the task
+                        todo_list[index][0] =description
+                        todo_list[index][1] = start_epoch_time
+                        todo_list[index][2] = end_epoch_time
+                        todo_list[index][3] = address
+                        print("\nTask Updated successfully!")
+            main_menu()
+            user_input()
+        except:
+            print("Task not found")
+            main_menu()
+            user_input()
+            
+    else:
+        print("No tasks to update")
         main_menu()
         user_input()
     
 
 
 def delete_task():
-    try:
-        task_or_date = input("Enter a task or date: ")
-        # search in list and print index
-        for index, task in enumerate(todo_list):
-            if task[0] == task_or_date or task[1] == task_or_date:
-                # delete the task
-                todo_list.pop(index)
-                print("\nTask deleted successfully!")
-        main_menu()
-        user_input()
-    except:
-        print("Task not found")
+    if todo_list:
+
+        try:
+            task_or_date = input("Enter a task or date: ")
+            # search in list and print index
+            for index, task in enumerate(todo_list):
+                if task[0] == task_or_date or task[1] == task_or_date:
+                    # delete the task
+                    todo_list.pop(index)
+                    print("\nTask deleted successfully!")
+            main_menu()
+            user_input()
+        except:
+            print("Task not found")
+            main_menu()
+            user_input()
+    else:
+        print("No tasks to delete")
         main_menu()
         user_input()
 
@@ -109,8 +123,7 @@ def view_all():
         des, epoch_start_time, epoch_end_time, add = item
         date, start_time, end_time = epoch_time_toString(epoch_start_time, epoch_end_time)
 
-        print("{:<20} {:<20} {:<20} {:<20} {:<20}".format(des, ''.join(map(str, date)), ''.join(
-            map(str, start_time)), ''.join(map(str, end_time)), ''.join(map(str, add))))
+        print("{:<20} {:<20} {:<20} {:<20} {:<20}".format(des, date, start_time, end_time, add))
     main_menu()
     user_input()
 
@@ -123,29 +136,26 @@ def export():
             print(epoch_end_time)
             date, start_time, end_time = epoch_time_toString(epoch_start_time, epoch_end_time)
             file.write("\n")
-            file.write(("{:<20} {:<20} {:<20} {:<20} {:<20}".format(des, date, ''.join(map(str, start_time)), ''.join(map(str, end_time)), ''.join(map(str, add)))).strip())
+            file.write("{:<20} {:<20} {:<20} {:<20} {:<20}".format(des, date, start_time, end_time, add))
         file.write(
             "\n********************************************************************\n")
     print("File exported")
     main_menu()
     user_input()
 
-
-
-
-def operation(operation_type, operation_value, operation_list):
-    if operation_type == "save":
-        with open("todo.txt", "w") as file:
-            for item in operation_list:
-                file.write(item + "\n")
-    elif operation_type == "search":
-        for item in operation_list:
-            if operation_value in item:
-                print(item)
-    elif operation_type == "exit":
-        print("Goodbye!")
+def search():
+    if todo_list:
+        search_term = input("Enter a task to search: ")
+        for item in todo_list:
+            if search_term in item:
+                date, start_time, end_time = epoch_time_toString(item[1],item[2])
+                print("{:<20} {:<20} {:<20} {:<20} {:<20}".format(
+                    'Description', 'Date', 'Start Time', 'End Time', 'Place'))
+                print("{:<20} {:<20} {:<20} {:<20} {:<20}".format(item[0], date, start_time, end_time, item[3]))
     else:
-        print("Invalid operation")
+        print("You have no tasks assigned yet")
+    main_menu()
+    user_input()
 
 #epoch to string
 def epoch_time_toString(s_time, e_time):
@@ -178,7 +188,7 @@ def user_input():
         elif menu == "5":
             export()
         elif menu == "6":
-            task = input("Enter the task you want to search: ")
+            search()
         else:
             print("Invalid choice")
         menu = input("Enter your choice: ")
